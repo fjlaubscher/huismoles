@@ -11,8 +11,8 @@ import blackLogo from 'assets/logo-black.png';
 import whiteLogo from 'assets/logo-white.png';
 
 const logoOptions = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' }
+  { value: 'light', label: 'Black' },
+  { value: 'dark', label: 'White' }
 ];
 
 const positionOptions = [
@@ -21,7 +21,7 @@ const positionOptions = [
 ];
 
 const Home = () => {
-  const [darkLogo, setDarkLogo] = useState(true);
+  const [alternateLogo, setAlternateLogo] = useState(false);
   const [logoAtTop, setLogoAtTop] = useState(true);
   const [originalImage, setOriginalImage] = useState(null);
   const [uploadedImage, setUploadedImage] = useState(null);
@@ -29,30 +29,32 @@ const Home = () => {
 
   useEffect(() => {
     if (originalImage) {
-      const logoUrl = (darkLogo && whiteLogo) || blackLogo;
-      const mergeOptions = {
-        width: 500,
-        height: 500
-      };
+      const logoUrl = (alternateLogo && whiteLogo) || blackLogo;
 
-      mergeImages(
-        [
+      const tempImage = new Image();
+      tempImage.onload = () => {
+        const imageSize = {
+          width: tempImage.width,
+          height: tempImage.height
+        };
+
+        mergeImages([
           { src: originalImage },
           {
             src: logoUrl,
             x: 0,
-            y: logoAtTop ? 0 : 322
+            y: logoAtTop ? 0 : imageSize.height - 178
           }
-        ],
-        mergeOptions
-      ).then(baseImage => {
-        const downloadableImg = baseImage.replace(
-          /^data:image\/[^;]+/,
-          'data:application/octet-stream'
-        );
-        setDownloadLink(downloadableImg);
-        setUploadedImage(baseImage);
-      });
+        ]).then(baseImage => {
+          const downloadableImg = baseImage.replace(
+            /^data:image\/[^;]+/,
+            'data:application/octet-stream'
+          );
+          setDownloadLink(downloadableImg);
+          setUploadedImage(baseImage);
+        });
+      };
+      tempImage.src = originalImage;
     }
   });
 
@@ -68,7 +70,7 @@ const Home = () => {
           <StyledDropdown
             label='Logo style'
             options={logoOptions}
-            onChange={selected => setDarkLogo(selected.value === 'dark')}
+            onChange={selected => setAlternateLogo(selected.value === 'dark')}
           />
           <StyledDropdown
             label='Logo position'
