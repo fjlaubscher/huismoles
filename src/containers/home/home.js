@@ -77,7 +77,7 @@ const Home = () => {
             options={positionOptions}
             onChange={selected => setLogoAtTop(selected.value === 'top')}
           />
-          <DownloadLink href={downloadLink} target='_blank'>
+          <DownloadLink href={downloadLink} download='huismoles.jpg'>
             Download
           </DownloadLink>
         </Form>
