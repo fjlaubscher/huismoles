@@ -1,83 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import mergeImages from 'merge-images';
 
 // components
 import ImageUpload from 'components/image-upload';
+import Canvas from 'components/canvas';
 import { Container, Form, DownloadLink, StyledDropdown } from './style';
 
-// images
-import blackLogo from 'assets/logo-black.png';
-import whiteLogo from 'assets/logo-white.png';
-
 const logoOptions = [
-  { value: 'light', label: 'Black' },
-  { value: 'dark', label: 'White' }
+  { value: 'light', label: 'White' },
+  { value: 'pink', label: 'Pink' },
+  { value: 'dark', label: 'Black' }
 ];
 
 const positionOptions = [
   { value: 'top', label: 'Top' },
+  { value: 'center', label: 'Center' },
   { value: 'bottom', label: 'Bottom' }
 ];
 
+const sizeOptions = [
+  { value: 'large', label: 'Large' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'small', label: 'Small' }
+];
+
 const Home = () => {
-  const [alternateLogo, setAlternateLogo] = useState(false);
-  const [logoAtTop, setLogoAtTop] = useState(true);
-  const [originalImage, setOriginalImage] = useState(null);
-  const [uploadedImage, setUploadedImage] = useState(null);
-  const [downloadLink, setDownloadLink] = useState(null);
-
-  useEffect(() => {
-    if (originalImage) {
-      const logoUrl = (alternateLogo && whiteLogo) || blackLogo;
-
-      const tempImage = new Image();
-      tempImage.onload = () => {
-        const imageSize = {
-          width: tempImage.width,
-          height: tempImage.height
-        };
-
-        mergeImages([
-          { src: originalImage },
-          {
-            src: logoUrl,
-            x: 0,
-            y: logoAtTop ? 0 : imageSize.height - 178
-          }
-        ]).then(baseImage => {
-          const downloadableImg = baseImage.replace(
-            /^data:image\/[^;]+/,
-            'data:application/octet-stream'
-          );
-          setDownloadLink(downloadableImg);
-          setUploadedImage(baseImage);
-        });
-      };
-      tempImage.src = originalImage;
-    }
-  });
+  const [logoStyle, setLogoStyle] = useState('light');
+  const [logoPosition, setLogoPosition] = useState('top');
+  const [logoSize, setLogoSize] = useState('large');
+  const [originalImage, setOriginalImage] = useState('');
+  const [downloadUrl, setDownloadUrl] = useState(null);
 
   return (
     <Container>
       <Helmet title='Huismoles' />
       <ImageUpload
-        onFileDrop={blobUrl => setOriginalImage(blobUrl)}
-        previewUrl={uploadedImage}
-      />
-      {uploadedImage && (
+        onUpload={imageUrl => setOriginalImage(imageUrl)}
+        showPreview={originalImage !== ''}
+      >
+        <Canvas
+          imageUrl={originalImage}
+          logoPosition={logoPosition}
+          logoStyle={logoStyle}
+          logoSize={logoSize}
+          onDrawComplete={data => {
+            const replaced = data.replace(
+              /^data:image\/[^;]+/,
+              'data:application/octet-stream'
+            );
+            setDownloadUrl(replaced);
+          }}
+        />
+      </ImageUpload>
+      {originalImage && (
         <Form>
           <StyledDropdown
             label='Logo style'
             options={logoOptions}
-            onChange={selected => setAlternateLogo(selected.value === 'dark')}
+            onChange={selected => setLogoStyle(selected.value)}
+          />
+          <StyledDropdown
+            label='Logo size'
+            options={sizeOptions}
+            onChange={selected => setLogoSize(selected.value)}
           />
           <StyledDropdown
             label='Logo position'
             options={positionOptions}
-            onChange={selected => setLogoAtTop(selected.value === 'top')}
+            onChange={selected => setLogoPosition(selected.value)}
           />
-          <DownloadLink href={downloadLink} download='huismoles.jpg'>
+          <DownloadLink href={downloadUrl} download='huismoles.jpg'>
             Download
           </DownloadLink>
         </Form>

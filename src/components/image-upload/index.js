@@ -2,14 +2,14 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 
-import { Container, Preview } from './style';
+import { Container } from './style';
 
-const ImageUpload = ({ onFileDrop, previewUrl }) => {
+const ImageUpload = ({ onUpload, children, showPreview }) => {
   // callback for dropzone
   const onDrop = useCallback(acceptedFiles => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      const uploadedUrl = URL.createObjectURL(acceptedFiles[0]);
-      onFileDrop(uploadedUrl);
+      const blobUrl = URL.createObjectURL(acceptedFiles[0]);
+      onUpload(blobUrl);
     }
   }, []);
 
@@ -21,15 +21,18 @@ const ImageUpload = ({ onFileDrop, previewUrl }) => {
   return (
     <Container {...getRootProps()} multiple={false}>
       <input {...getInputProps()} />
-      {!previewUrl && <p>Drag & drop an image here, or click to select one.</p>}
-      {previewUrl && <Preview src={previewUrl} />}
+      {!showPreview && (
+        <p>Drag & drop an image here, or click to select one.</p>
+      )}
+      {showPreview && children}
     </Container>
   );
 };
 
 ImageUpload.propTypes = {
-  onFileDrop: PropTypes.func.isRequired,
-  previewUrl: PropTypes.string
+  onUpload: PropTypes.func.isRequired,
+  showPreview: PropTypes.bool.isRequired,
+  children: PropTypes.element.isRequired
 };
 
 export default ImageUpload;

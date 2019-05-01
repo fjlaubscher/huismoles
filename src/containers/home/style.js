@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Link from 'react-router-dom/Link';
-import { colors, pxtorem } from 'styles/index';
+import { breakpoints, colors, pxtorem } from 'styles/index';
 
 import Dropdown from 'components/dropdown';
 
@@ -38,6 +38,11 @@ export const DownloadLink = styled.a`
   text-decoration: none;
   text-transform: uppercase;
   text-align: center;
+  display: none;
+
+  @media (min-width: ${breakpoints.large}px) {
+    display: block;
+  }
 `;
 
 export const StyledDropdown = styled(Dropdown)`

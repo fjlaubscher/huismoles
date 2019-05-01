@@ -15,7 +15,6 @@
     "jsx-quotes": ["error", "prefer-single"],
     "semi": ["error", "always"],
     "curly": ["error", "multi"],
-    "indent": ["error", 2],
     "no-tabs": "off",
     "space-before-function-paren": "off",
     "prefer-arrow-callback": ["error"],
@@ -29,7 +28,6 @@
     "react/prefer-es6-class": ["error", "always"],
     "react/prefer-stateless-function": "warn",
     "react/jsx-pascal-case": "error",
-    "react/jsx-indent": ["error", 2],
     "react/jsx-indent-props": ["error", 2],
     "react/self-closing-comp": [
       "error",

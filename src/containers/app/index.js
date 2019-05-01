@@ -8,14 +8,13 @@ import NotFound from 'containers/not-found';
 
 // components
 import { GlobalStyle, Container, Banner } from './style';
-
-import BannerImg from 'assets/banner.jpg';
+import { ReactComponent as BannerSVG } from 'assets/vector.svg';
 
 const App = () => (
   <Fragment>
     <GlobalStyle />
     <Banner>
-      <img src={BannerImg} alt='banner' />
+      <BannerSVG />
     </Banner>
     <Container>
       <Switch>

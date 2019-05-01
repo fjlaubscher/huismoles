@@ -26,6 +26,7 @@ export const Container = styled.div`
 export const Banner = styled.div`
   max-width: ${pxtorem(830)};
   width: 100%;
+  padding: 1rem;
   margin: 0 auto;
 
   img {
